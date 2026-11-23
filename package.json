@@ -1,0 +1,44 @@
+{
+  "name": "eus-pass-backend",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "API REST para Eus-Pass, una plataforma de gamificación cultural desarrollada con Node.js, Express y MongoDB. ",
+  "main": "src/index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "dev": "node --watch src/index.js",
+    "start": "node src/index.js",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "test:watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch",
+    "test:coverage": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage"
+  },
+  "jest": {
+    "testEnvironment": "node"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ainara17/Eus-Pass-Backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ainara17/Eus-Pass-Backend/issues"
+  },
+  "homepage": "https://github.com/ainara17/Eus-Pass-Backend#readme",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.10",
+    "express": "^5.3.0",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.12.3"
+  },
+  "devDependencies": {
+    "jest": "^30.5.2",
+    "jsdoc": "^4.0.5",
+    "nodemon": "^3.1.14"
+  }
+}
