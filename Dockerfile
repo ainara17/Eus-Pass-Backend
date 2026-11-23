@@ -1,11 +1,11 @@
-FROM node:20-slim
+FROM node:22-slim
 
 WORKDIR /app
 
 # Primero solo package*.json: así Docker cachea npm install
 # y no lo repite salvo que cambien las dependencias
 COPY package*.json ./
-RUN npm install
+RUN npm ci
 
 COPY . .
 
