@@ -1,8 +1,5 @@
 import { User } from "../models/index.js";
 
-const PUBLIC_ATTRIBUTES = {exclude: ["password"]};
-
-
 /**
  * Quita la contraseña de un usuario recién creado o modificado.
  * (create y save devuelven el objeto completo, con la contraseña)
@@ -16,7 +13,7 @@ const userWithoutPassword = (user) => {
     return rest;
 }
 
-// ------------------ CRUD de favoritos ------------------
+// ------------------ CRUD de usuarios ------------------
 
 // ------------------ C (Create)---------------------------
 
@@ -67,10 +64,10 @@ const create = async (data) => {
 
 const getUserAll = async () => {
     try{
-        const users = await User.findAll({
-            attributes: PUBLIC_ATTRIBUTES,
-            order: [["userId", "ASC"]]
-        });
+        const users = await User.find()
+                                .select("-password")
+                                .sort({ createdAt: 1 });
+
         return users;
 
     }catch(error){
@@ -82,10 +79,7 @@ const getUserAll = async () => {
 
 const getUserById = async (id) => {
     try{
-        const user = await User.findById(id, {
-            attributes: PUBLIC_ATTRIBUTES,
-            
-        });
+        const user = await User.findById(id).select("-password");
 
         if(!user){
             throw new NotFoundError("Usuario no encontrado");
@@ -96,6 +90,38 @@ const getUserById = async (id) => {
         throwError(error);        
 
     }
+};
+const getUserByUsername = async (username) => {
+    try{
+        const user= await User.findOne({email}).select("-password")
+
+        if(!user){
+            throw new NotFoundError("Usuario no encontrado");
+        }
+
+        return user
+    }catch(error){
+        console.log(error)
+        throwError(error);
+
+    }
+    
+};
+
+const getUserByEmail = async (email) => {
+    try{
+        const user= await User.findOne({email})
+
+        if(!user){
+            throw new NotFoundError("Usuario no encontrado");
+        }
+
+        return user
+    }catch(error){
+        throwError(error);
+
+    }
+    
 };
 
 // ---------------- U (Update) -----------------------------------
@@ -144,7 +170,7 @@ const updateUser = async(id, data) => {
 
 const modifyUser = async (id, data) => {
     try{
-        const { username, email, password, role } = data;
+        const { username, email, avatar, interests, password, role } = data;
         const user = await User.findById(id);
         if(!user){
             throw new NotFoundError("El usuario no existe");
@@ -153,6 +179,9 @@ const modifyUser = async (id, data) => {
         user.email = email ?? user.email;
         user.password = password || user.password;
         user.role = role ?? user.role;
+        user.avatar = avatar ?? user.avatar;
+        user.interests = interests ?? user.interests;
+
         await user.save();
         return userWithoutPassword(user);
 
@@ -178,7 +207,7 @@ const removeUser = async (id) => {
     try{
         const user = await User.findById(id);
         if(user){
-            await user.destroy();
+            await user.deleteOne();
             return userWithoutPassword(user);
         }
         throw new NotFoundError("El usuario no existe");
@@ -195,6 +224,8 @@ export default {
     create, 
     getUserAll, 
     getUserById, 
+    getUserByUsername,
+    getUserByEmail,
     updateUser, 
     modifyUser, 
     removeUser
